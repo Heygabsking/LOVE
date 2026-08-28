@@ -26,9 +26,9 @@ function PublicSurprise() {
   useEffect(() => {
     const fetchSurprise = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:5000/api/surprises/${id}`
-        );
+       const response = await fetch(
+  `${import.meta.env.VITE_API_URL}/api/surprises/${id}`
+);
 
         const data = await response.json();
 
