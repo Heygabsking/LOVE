@@ -1,12 +1,14 @@
+import { useState } from "react";
 import { ImagePlus, X, Camera } from "lucide-react";
 
 function PhotoUploader({ photos, setPhotos }) {
+  const [uploading, setUploading] = useState(false);
+
   const handleUpload = async (e) => {
     const files = Array.from(e.target.files);
 
     if (!files.length) return;
 
-    // Maximum of 5 photos
     const availableSlots = 5 - photos.length;
 
     if (availableSlots <= 0) {
@@ -16,45 +18,46 @@ function PhotoUploader({ photos, setPhotos }) {
 
     const selectedFiles = files.slice(0, availableSlots);
 
+    setUploading(true);
+
     try {
       const API_URL = import.meta.env.VITE_API_URL;
 
       if (!API_URL) {
-        throw new Error("API URL is not configured.");
+        throw new Error("VITE_API_URL is not configured.");
       }
 
-      // Upload each selected photo to the server
-      const uploadedUrls = [];
+      const uploadedPhotos = [];
 
       for (const file of selectedFiles) {
         const formData = new FormData();
 
-        formData.append("photo", file);
+        formData.append("image", file);
 
-        const response = await fetch(`${API_URL}/api/upload`, {
-          method: "POST",
-          body: formData,
-        });
+        const response = await fetch(
+          `${API_URL}/api/upload`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
 
         const result = await response.json();
 
         if (!response.ok) {
           throw new Error(
-            result.message || "Failed to upload photo."
+            result.message || "Image upload failed."
           );
         }
 
-        if (!result.url) {
-          throw new Error("Cloudinary did not return an image URL.");
-        }
-
-        uploadedUrls.push(result.url);
+        uploadedPhotos.push({
+          url: result.url,
+        });
       }
 
-      // Save the permanent Cloudinary URLs
       setPhotos((currentPhotos) => [
         ...currentPhotos,
-        ...uploadedUrls,
+        ...uploadedPhotos,
       ]);
 
     } catch (error) {
@@ -64,26 +67,15 @@ function PhotoUploader({ photos, setPhotos }) {
         "The photo could not be uploaded. Please make sure the server is running."
       );
     } finally {
+      setUploading(false);
       e.target.value = "";
     }
   };
 
   const removePhoto = (index) => {
-    setPhotos((currentPhotos) => {
-      const photoToRemove = currentPhotos[index];
-
-      // Only revoke temporary browser URLs if one exists
-      if (
-        photoToRemove &&
-        typeof photoToRemove === "object" &&
-        photoToRemove.url &&
-        photoToRemove.url.startsWith("blob:")
-      ) {
-        URL.revokeObjectURL(photoToRemove.url);
-      }
-
-      return currentPhotos.filter((_, i) => i !== index);
-    });
+    setPhotos((currentPhotos) =>
+      currentPhotos.filter((_, i) => i !== index)
+    );
   };
 
   return (
@@ -99,6 +91,7 @@ function PhotoUploader({ photos, setPhotos }) {
             accept="image/*"
             multiple
             onChange={handleUpload}
+            disabled={uploading}
           />
 
           <div className="upload-icon">
@@ -106,19 +99,25 @@ function PhotoUploader({ photos, setPhotos }) {
           </div>
 
           <h3>
-            {photos.length === 0
+            {uploading
+              ? "Uploading your memories..."
+              : photos.length === 0
               ? "Add some memories"
               : "Add more photos"}
           </h3>
 
           <p>
-            Add up to 5 photos if you'd like.
-            You can also skip this completely.
+            {uploading
+              ? "Please wait while your photos are being uploaded."
+              : "Add up to 5 photos if you'd like. You can also skip this completely."}
           </p>
 
           <span className="upload-button">
             <Camera size={15} />
-            Choose photo{photos.length > 0 ? "s" : ""}
+
+            {uploading
+              ? "Uploading..."
+              : `Choose photo${photos.length > 0 ? "s" : ""}`}
           </span>
 
           <small>
@@ -136,43 +135,32 @@ function PhotoUploader({ photos, setPhotos }) {
 
           <div className="photo-grid">
 
-            {photos.map((photo, index) => {
+            {photos.map((photo, index) => (
+              <div
+                className="uploaded-photo"
+                key={`${photo.url}-${index}`}
+              >
 
-              // Supports both old object format and
-              // new Cloudinary string URLs
-              const photoUrl =
-                typeof photo === "string"
-                  ? photo
-                  : photo.url;
+                <img
+                  src={photo.url}
+                  alt={`Memory ${index + 1}`}
+                />
 
-              return (
-                <div
-                  className="uploaded-photo"
-                  key={`${photoUrl}-${index}`}
+                <button
+                  type="button"
+                  className="remove-photo"
+                  onClick={() => removePhoto(index)}
+                  aria-label="Remove photo"
                 >
+                  <X size={15} />
+                </button>
 
-                  <img
-                    src={photoUrl}
-                    alt={`Memory ${index + 1}`}
-                  />
-
-                  <button
-                    type="button"
-                    className="remove-photo"
-                    onClick={() => removePhoto(index)}
-                    aria-label="Remove photo"
-                  >
-                    <X size={15} />
-                  </button>
-
-                </div>
-              );
-            })}
+              </div>
+            ))}
 
           </div>
 
           <div className="photo-status">
-
             <span>
               {photos.length}{" "}
               {photos.length === 1 ? "photo" : "photos"} added
@@ -183,7 +171,6 @@ function PhotoUploader({ photos, setPhotos }) {
                 You can add {5 - photos.length} more
               </span>
             )}
-
           </div>
 
         </div>

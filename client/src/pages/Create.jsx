@@ -67,7 +67,17 @@ function Create() {
     setSaving(true);
 
     try {
-     const API_URL = import.meta.env.VITE_API_URL;
+      const API_URL = import.meta.env.VITE_API_URL;
+
+      // ===============================
+      // PREPARE PHOTO URLS
+      // ===============================
+
+      const photoUrls = (photos || [])
+        .map((photo) =>
+          typeof photo === "string" ? photo : photo.url
+        )
+        .filter(Boolean);
 
       const data = {
         type: form.type,
@@ -77,7 +87,7 @@ function Create() {
         message: form.message,
         design: form.template,
         template: form.template,
-        photos: photos || [],
+        photos: photoUrls,
       };
 
       let response;
@@ -143,6 +153,7 @@ function Create() {
 
       console.log("Surprise ID:", surpriseId);
       console.log("Share URL:", shareUrl);
+      console.log("Photo URLs:", photoUrls);
 
       // ===============================
       // GO TO PREVIEW
@@ -151,7 +162,7 @@ function Create() {
       navigate("/preview", {
         state: {
           ...form,
-          photos: photos || [],
+          photos: photoUrls,
           surpriseId,
           shareUrl,
         },
