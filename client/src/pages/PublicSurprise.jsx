@@ -262,6 +262,15 @@ function PublicSurprise() {
 
           </div>
 
+{/* CREATE YOUR OWN CARD BUTTON */}
+<button
+  type="button"
+  className="create-own-button"
+  onClick={() => window.location.href = "/"}
+>
+  Create a surprise for someone ❤️
+</button>
+
           <button
             type="button"
             className="restart-button"
@@ -434,13 +443,7 @@ function PublicSurprise() {
               {surprise.sender || "someone special"}
 
             </p>
-            <button
-  type="button"
-  className="create-own-button"
-  onClick={() => navigate("/create")}
->
-  💌 Create a surprise for someone else
-</button>
+           
 
           </div>
 
