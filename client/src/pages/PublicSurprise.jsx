@@ -261,6 +261,58 @@ function PublicSurprise() {
             </span>
 
           </div>
+          {/* =========================
+    MEMORY REVEAL
+========================= */}
+
+{surprise.photos && surprise.photos.length > 0 && (
+
+  <div className="memory-reveal">
+
+    <div className="memory-heading">
+
+      <Sparkles size={18} />
+
+      <span>
+        Your beautiful memories
+      </span>
+
+      <Sparkles size={18} />
+
+    </div>
+
+
+    <div className="memory-gallery">
+
+      {surprise.photos.map((photo, index) => (
+
+        <div
+          className={`memory-photo memory-photo-${index + 1}`}
+          key={photo}
+        >
+
+          <img
+            src={photo}
+            alt={`Beautiful memory ${index + 1}`}
+          />
+
+        </div>
+
+      ))}
+
+    </div>
+
+
+    <p className="memory-caption">
+
+      Every picture holds a memory,
+      and every memory is special. ❤️
+
+    </p>
+
+  </div>
+
+)}
 
 {/* CREATE YOUR OWN CARD BUTTON */}
 <button

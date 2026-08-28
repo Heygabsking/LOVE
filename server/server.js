@@ -1,11 +1,37 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const cloudinary = require("cloudinary").v2;
+const multer = require("multer");
+
 require("dotenv").config();
 
 const Surprise = require("./models/Surprise");
 
 const app = express();
+
+
+// ============================
+// CLOUDINARY CONFIGURATION
+// ============================
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+
+// ============================
+// MULTER CONFIGURATION
+// ============================
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 10 * 1024 * 1024,
+  },
+});
 
 
 // ============================
@@ -30,6 +56,53 @@ app.get("/", (req, res) => {
   res.json({
     message: "SurpriseMe server is running ❤️",
   });
+});
+
+
+// ============================
+// CLOUDINARY IMAGE UPLOAD
+// ============================
+
+app.post("/api/upload", upload.single("image"), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        message: "No image was provided.",
+      });
+    }
+
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder: "surpriseme",
+        resource_type: "image",
+      },
+      (error, result) => {
+        if (error) {
+          console.error("Cloudinary upload error:", error);
+
+          return res.status(500).json({
+            message: "Image upload failed.",
+            error: error.message,
+          });
+        }
+
+        res.status(200).json({
+          message: "Image uploaded successfully ❤️",
+          url: result.secure_url,
+        });
+      }
+    );
+
+    stream.end(req.file.buffer);
+
+  } catch (error) {
+    console.error("Upload error:", error);
+
+    res.status(500).json({
+      message: "Image upload failed.",
+      error: error.message,
+    });
+  }
 });
 
 

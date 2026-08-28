@@ -1,7 +1,7 @@
 import { ImagePlus, X, Camera } from "lucide-react";
 
 function PhotoUploader({ photos, setPhotos }) {
-  const handleUpload = (e) => {
+  const handleUpload = async (e) => {
     const files = Array.from(e.target.files);
 
     if (!files.length) return;
@@ -9,26 +9,76 @@ function PhotoUploader({ photos, setPhotos }) {
     // Maximum of 5 photos
     const availableSlots = 5 - photos.length;
 
+    if (availableSlots <= 0) {
+      e.target.value = "";
+      return;
+    }
+
     const selectedFiles = files.slice(0, availableSlots);
 
-    const newPhotos = selectedFiles.map((file) => ({
-      file,
-      url: URL.createObjectURL(file),
-    }));
+    try {
+      const API_URL = import.meta.env.VITE_API_URL;
 
-    setPhotos((currentPhotos) => [
-      ...currentPhotos,
-      ...newPhotos,
-    ]);
+      if (!API_URL) {
+        throw new Error("API URL is not configured.");
+      }
 
-    e.target.value = "";
+      // Upload each selected photo to the server
+      const uploadedUrls = [];
+
+      for (const file of selectedFiles) {
+        const formData = new FormData();
+
+        formData.append("photo", file);
+
+        const response = await fetch(`${API_URL}/api/upload`, {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            result.message || "Failed to upload photo."
+          );
+        }
+
+        if (!result.url) {
+          throw new Error("Cloudinary did not return an image URL.");
+        }
+
+        uploadedUrls.push(result.url);
+      }
+
+      // Save the permanent Cloudinary URLs
+      setPhotos((currentPhotos) => [
+        ...currentPhotos,
+        ...uploadedUrls,
+      ]);
+
+    } catch (error) {
+      console.error("Photo upload error:", error);
+
+      alert(
+        "The photo could not be uploaded. Please make sure the server is running."
+      );
+    } finally {
+      e.target.value = "";
+    }
   };
 
   const removePhoto = (index) => {
     setPhotos((currentPhotos) => {
       const photoToRemove = currentPhotos[index];
 
-      if (photoToRemove?.url) {
+      // Only revoke temporary browser URLs if one exists
+      if (
+        photoToRemove &&
+        typeof photoToRemove === "object" &&
+        photoToRemove.url &&
+        photoToRemove.url.startsWith("blob:")
+      ) {
         URL.revokeObjectURL(photoToRemove.url);
       }
 
@@ -86,34 +136,46 @@ function PhotoUploader({ photos, setPhotos }) {
 
           <div className="photo-grid">
 
-            {photos.map((photo, index) => (
-              <div
-                className="uploaded-photo"
-                key={photo.url}
-              >
+            {photos.map((photo, index) => {
 
-                <img
-                  src={photo.url}
-                  alt={`Memory ${index + 1}`}
-                />
+              // Supports both old object format and
+              // new Cloudinary string URLs
+              const photoUrl =
+                typeof photo === "string"
+                  ? photo
+                  : photo.url;
 
-                <button
-                  type="button"
-                  className="remove-photo"
-                  onClick={() => removePhoto(index)}
-                  aria-label="Remove photo"
+              return (
+                <div
+                  className="uploaded-photo"
+                  key={`${photoUrl}-${index}`}
                 >
-                  <X size={15} />
-                </button>
 
-              </div>
-            ))}
+                  <img
+                    src={photoUrl}
+                    alt={`Memory ${index + 1}`}
+                  />
+
+                  <button
+                    type="button"
+                    className="remove-photo"
+                    onClick={() => removePhoto(index)}
+                    aria-label="Remove photo"
+                  >
+                    <X size={15} />
+                  </button>
+
+                </div>
+              );
+            })}
 
           </div>
 
           <div className="photo-status">
+
             <span>
-              {photos.length} {photos.length === 1 ? "photo" : "photos"} added
+              {photos.length}{" "}
+              {photos.length === 1 ? "photo" : "photos"} added
             </span>
 
             {photos.length < 5 && (
@@ -121,6 +183,7 @@ function PhotoUploader({ photos, setPhotos }) {
                 You can add {5 - photos.length} more
               </span>
             )}
+
           </div>
 
         </div>
