@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Heart,
   Sparkles,
@@ -12,6 +12,7 @@ import {
 
 function PublicSurprise() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [surprise, setSurprise] = useState(null);
   const [accepted, setAccepted] = useState(false);
@@ -433,6 +434,13 @@ function PublicSurprise() {
               {surprise.sender || "someone special"}
 
             </p>
+            <button
+  type="button"
+  className="create-own-button"
+  onClick={() => navigate("/create")}
+>
+  💌 Create a surprise for someone else
+</button>
 
           </div>
 

@@ -5797,3 +5797,20 @@ footer {
     max-width: 280px;
   }
 }
+.create-own-button {
+  margin-top: 30px;
+  padding: 14px 24px;
+  border: none;
+  border-radius: 12px;
+  background: #ed4565;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.create-own-button:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
