@@ -556,6 +556,11 @@ a {
 }
 
 .create-logo {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -564,6 +569,10 @@ a {
 
   font-size: 21px;
   font-weight: 700;
+}
+
+.create-logo:focus {
+  outline: none;
 }
 
 .logo-heart {
@@ -1446,6 +1455,11 @@ a {
 }
 
 .preview-brand {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
   display: flex;
 
   align-items: center;
@@ -1457,6 +1471,10 @@ a {
   font-size: 16px;
 
   color: #21191a;
+}
+
+.preview-brand:focus {
+  outline: none;
 }
 
 .preview-brand svg {
@@ -6110,4 +6128,95 @@ footer {
     height: 260px;
   }
 
+}
+.home-logo {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.home-logo:focus {
+  outline: none;
+}
+
+.home-logo:hover {
+  background: transparent;
+}
+
+/* =========================================================
+   STYLIZED LOGO & TYPOGRAPHY
+   ========================================================= */
+
+.logo-text {
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: #21191a;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.logo-text .logo-highlight {
+  color: #e94b68;
+  font-style: italic;
+  margin-left: 1px;
+}
+
+.home-logo .logo-text,
+.create-logo .logo-text {
+  font-size: 21px;
+}
+
+.preview-brand .logo-text {
+  font-size: 16px;
+}
+
+.footer-brand-btn .logo-text {
+  font-size: 14px;
+}
+
+.footer-brand-btn {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #ed4968;
+}
+
+.footer-brand-btn:focus {
+  outline: none;
+}
+
+/* HEARTBEAT ANIMATION */
+@keyframes logo-heartbeat {
+  0% { transform: scale(1); }
+  15% { transform: scale(1.15); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.15); }
+  70% { transform: scale(1); }
+}
+
+.home-logo:hover .home-logo-icon,
+.create-logo:hover .logo-heart,
+.preview-brand:hover svg,
+.footer-brand-btn:hover svg {
+  animation: logo-heartbeat 0.8s ease-in-out infinite;
+}
+
+/* Gently lift logo on hover */
+.home-logo:hover .logo-text,
+.create-logo:hover .logo-text,
+.preview-brand:hover .logo-text,
+.footer-brand-btn:hover .logo-text {
+  color: #e94b68;
 }

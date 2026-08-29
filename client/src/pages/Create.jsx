@@ -197,15 +197,22 @@ function Create() {
           <span>Back home</span>
         </button>
 
-        <div className="create-logo">
+        <button
+          type="button"
+          className="create-logo"
+          onClick={() => navigate("/")}
+          aria-label="Go to home"
+        >
 
           <div className="logo-heart">
             <Heart size={21} fill="white" />
           </div>
 
-          <span>SurpriseMe</span>
+          <span className="logo-text">
+            Surprise<span className="logo-highlight">Me</span>
+          </span>
 
-        </div>
+        </button>
 
         <div className="create-step">
           Step 1 of 3

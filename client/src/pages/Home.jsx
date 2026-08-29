@@ -39,15 +39,20 @@ function Home() {
 
       <header className="home-header">
 
-        <div className="home-logo">
+        <button
+  type="button"
+  className="home-logo"
+  onClick={() => navigate("/")}
+  aria-label="Go to home"
+>
+  <div className="home-logo-icon">
+    <Heart size={20} fill="white" />
+  </div>
 
-          <div className="home-logo-icon">
-            <Heart size={20} fill="white" />
-          </div>
-
-          <span>SurpriseMe</span>
-
-        </div>
+  <span className="logo-text">
+    Surprise<span className="logo-highlight">Me</span>
+  </span>
+</button>
 
         <button
           type="button"
@@ -483,10 +488,17 @@ function Home() {
 
       <footer className="home-footer">
 
-        <div className="footer-brand">
+        <button
+          type="button"
+          className="footer-brand-btn"
+          onClick={() => navigate("/")}
+          aria-label="Go to home"
+        >
           <Heart size={14} fill="currentColor" />
-          SurpriseMe
-        </div>
+          <span className="logo-text">
+            Surprise<span className="logo-highlight">Me</span>
+          </span>
+        </button>
 
         <span>
           Made with love.

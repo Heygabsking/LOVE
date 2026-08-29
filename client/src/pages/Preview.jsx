@@ -253,7 +253,7 @@ function Preview() {
           text: "I made something special for you.",
           url: surpriseLink,
         });
-      } catch (error) {
+      } catch {
         console.log("Sharing cancelled.");
       }
     } else {
@@ -293,10 +293,17 @@ function Preview() {
           Edit surprise
         </button>
 
-        <div className="preview-brand">
+        <button
+          type="button"
+          className="preview-brand"
+          onClick={() => navigate("/")}
+          aria-label="Go to home"
+        >
           <Heart size={16} fill="currentColor" />
-          SurpriseMe
-        </div>
+          <span className="logo-text">
+            Surprise<span className="logo-highlight">Me</span>
+          </span>
+        </button>
 
         <div className="preview-label">
           PREVIEW

@@ -359,10 +359,17 @@ function PublicSurprise() {
 
       <div className="preview-topbar">
 
-        <div className="preview-brand">
+        <button
+          type="button"
+          className="preview-brand"
+          onClick={() => navigate("/")}
+          aria-label="Go to home"
+        >
           <Heart size={16} fill="currentColor" />
-          SurpriseMe
-        </div>
+          <span className="logo-text">
+            Surprise<span className="logo-highlight">Me</span>
+          </span>
+        </button>
 
         <div className="preview-label">
           A SURPRISE FOR YOU
