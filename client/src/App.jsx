@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Create from "./pages/Create";
 import Preview from "./pages/Preview";
 import PublicSurprise from "./pages/PublicSurprise";
+import OfflineBanner from "./components/OfflineBanner";
 
 import "./App.css";
 
@@ -51,6 +52,7 @@ function PageLoader({ children }) {
 function App() {
   return (
     <BrowserRouter>
+      <OfflineBanner />
       <PageLoader>
         <Routes>
 

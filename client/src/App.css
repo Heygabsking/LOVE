@@ -6283,3 +6283,95 @@ footer {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* =========================================================
+   OFFLINE & NETWORK STATUS NOTIFICATION
+   ========================================================= */
+
+.offline-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  animation: slideDownBanner 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.3s ease;
+}
+
+.offline-banner.offline-active {
+  background: #fff1f2;
+  color: #b91c1c;
+  border-bottom: 1px solid #fecdd3;
+}
+
+.offline-banner.online-restored {
+  background: #ecfdf5;
+  color: #065f46;
+  border-bottom: 1px solid #a7f3d0;
+}
+
+.offline-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.offline-banner-icon {
+  flex-shrink: 0;
+}
+
+.offline-banner-icon.pulse {
+  animation: pulseOffline 1.5s infinite ease-in-out;
+}
+
+.offline-retry-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #b91c1c;
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: opacity 0.2s ease, transform 0.15s ease;
+}
+
+.offline-retry-button:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+
+.offline-retry-button:active {
+  transform: scale(0.98);
+}
+
+@keyframes slideDownBanner {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulseOffline {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.92);
+  }
+}

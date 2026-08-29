@@ -171,9 +171,15 @@ function Create() {
     } catch (error) {
       console.error("Save error:", error);
 
-      setError(
-        "We couldn't save your surprise. Please make sure the server is running."
-      );
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        setError(
+          "You are currently offline. Please check your internet connection and try again."
+        );
+      } else {
+        setError(
+          "We couldn't save your surprise. Please make sure the server is running."
+        );
+      }
     } finally {
       setSaving(false);
     }

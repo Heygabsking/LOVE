@@ -63,9 +63,13 @@ function PhotoUploader({ photos, setPhotos }) {
     } catch (error) {
       console.error("Photo upload error:", error);
 
-      alert(
-        "The photo could not be uploaded. Please make sure the server is running."
-      );
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        alert("You are currently offline. Please reconnect to the internet to upload photos.");
+      } else {
+        alert(
+          "The photo could not be uploaded. Please make sure the server is running."
+        );
+      }
     } finally {
       setUploading(false);
       e.target.value = "";

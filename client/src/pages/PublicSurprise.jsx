@@ -8,6 +8,8 @@ import {
   PartyPopper,
   Star,
   Mail,
+  WifiOff,
+  RefreshCw,
 } from "lucide-react";
 
 function PublicSurprise() {
@@ -24,30 +26,41 @@ function PublicSurprise() {
     y: 0,
   });
 
-  useEffect(() => {
-    const fetchSurprise = async () => {
-      try {
-       const response = await fetch(
-  `${import.meta.env.VITE_API_URL}/api/surprises/${id}`
-);
+  const fetchSurprise = async () => {
+    try {
+      setLoading(true);
+      setError("");
 
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(
-            data.message || "Surprise could not be found."
-          );
-        }
-
-        setSurprise(data.surprise);
-      } catch (err) {
-        console.error("Error loading surprise:", err);
-        setError("This surprise could not be found.");
-      } finally {
-        setLoading(false);
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        throw new Error("offline");
       }
-    };
 
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/surprises/${id}`
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Surprise could not be found."
+        );
+      }
+
+      setSurprise(data.surprise);
+    } catch (err) {
+      console.error("Error loading surprise:", err);
+      if (err.message === "offline" || (typeof navigator !== "undefined" && !navigator.onLine)) {
+        setError("offline");
+      } else {
+        setError(err.message || "This surprise could not be found.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchSurprise();
   }, [id]);
 
@@ -80,23 +93,39 @@ function PublicSurprise() {
   }
 
   if (error || !surprise) {
+    const isOffline = error === "offline" || (typeof navigator !== "undefined" && !navigator.onLine);
+
     return (
       <div className="preview-page design-romantic">
         <div className="success-screen">
           <div className="success-icon">
-            <Heart size={50} />
+            {isOffline ? <WifiOff size={50} /> : <Heart size={50} />}
           </div>
 
           <div className="success-eyebrow">
             <Sparkles size={15} />
-            OOPS
+            {isOffline ? "NO CONNECTION" : "OOPS"}
           </div>
 
-          <h1>Surprise not found</h1>
+          <h1>{isOffline ? "You're offline" : "Surprise not found"}</h1>
 
           <p>
-            This surprise may have been removed or the link is incorrect.
+            {isOffline
+              ? "Please check your internet or Wi-Fi connection and try again."
+              : "This surprise may have been removed or the link is incorrect."}
           </p>
+
+          {isOffline && (
+            <button
+              type="button"
+              className="create-own-button"
+              style={{ marginTop: "1.5rem", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" }}
+              onClick={fetchSurprise}
+            >
+              <RefreshCw size={16} />
+              Try again
+            </button>
+          )}
         </div>
       </div>
     );
