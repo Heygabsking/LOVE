@@ -359,8 +359,6 @@ function Preview() {
           </p>
 
 
-          {/* MEMORY MESSAGE */}
-
           <div className="success-message">
 
             <Heart
@@ -373,6 +371,61 @@ function Preview() {
             </span>
 
           </div>
+
+          {/* =========================
+              MEMORY REVEAL (PREVIEW)
+          ========================= */}
+
+          {state.photos && state.photos.length > 0 && (
+
+            <div className="memory-reveal">
+
+              <div className="memory-heading">
+
+                <Sparkles size={18} />
+
+                <span>
+                  Your beautiful memories
+                </span>
+
+                <Sparkles size={18} />
+
+              </div>
+
+
+              <div className={`memory-gallery photos-${state.photos.length}`}>
+
+                {state.photos.map((photo, index) => {
+                  const photoUrl = typeof photo === "string" ? photo : photo?.url;
+                  if (!photoUrl) return null;
+                  return (
+                    <div
+                      className={`memory-photo memory-photo-${index + 1}`}
+                      key={`${photoUrl}-${index}`}
+                    >
+
+                      <img
+                        src={photoUrl}
+                        alt={`Beautiful memory ${index + 1}`}
+                      />
+
+                    </div>
+                  );
+                })}
+
+              </div>
+
+
+              <p className="memory-caption">
+
+                Every picture holds a memory,
+                and every memory is special. ❤️
+
+              </p>
+
+            </div>
+
+          )}
 
 
           {/* ========================================

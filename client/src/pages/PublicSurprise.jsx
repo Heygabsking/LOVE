@@ -311,7 +311,7 @@ function PublicSurprise() {
     </div>
 
 
-    <div className="memory-gallery">
+    <div className={`memory-gallery photos-${surprise.photos.length}`}>
 
       {surprise.photos.map((photo, index) => (
 

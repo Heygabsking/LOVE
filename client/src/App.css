@@ -5919,12 +5919,11 @@ footer {
 
 .memory-reveal {
   width: 100%;
-  max-width: 900px;
+  max-width: 780px;
   margin: 35px auto 25px;
   text-align: center;
   animation: memoryReveal 0.9s ease both;
 }
-
 
 .memory-heading {
   display: flex;
@@ -5940,68 +5939,110 @@ footer {
   letter-spacing: 0.03em;
 }
 
-
 .memory-gallery {
   width: 100%;
-
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-
-  gap: 14px;
-
+  gap: 16px;
   margin: 0 auto;
+  align-items: center;
 }
-
 
 .memory-photo {
   position: relative;
-
   width: 100%;
-  height: 260px;
-
+  aspect-ratio: 4 / 3;
   overflow: hidden;
-
   border-radius: 20px;
-
   background: #f8f1f3;
-
-  box-shadow:
-    0 12px 35px rgba(0, 0, 0, 0.12);
-
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
   animation: photoAppear 0.7s ease both;
 }
-
 
 .memory-photo img {
   width: 100%;
   height: 100%;
-
   display: block;
-
   object-fit: cover;
-
   object-position: center;
-
-  transition:
-    transform 0.5s ease;
+  transition: transform 0.5s ease;
 }
-
 
 .memory-photo:hover img {
-  transform: scale(1.05);
+  transform: scale(1.04);
 }
 
+/* 1 Photo Layout */
+.memory-gallery.photos-1,
+.memory-gallery:has(> .memory-photo:only-child) {
+  max-width: 580px;
+  grid-template-columns: 1fr;
+}
 
-/* First photo gets more attention */
+.memory-gallery.photos-1 .memory-photo,
+.memory-photo:only-child {
+  grid-column: span 1 !important;
+  aspect-ratio: 4 / 3;
+  max-height: 440px;
+  margin: 0 auto;
+}
 
-.memory-photo:first-child {
+/* 2 Photos Layout */
+.memory-gallery.photos-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 760px;
+}
+
+.memory-gallery.photos-2 .memory-photo {
+  grid-column: span 1;
+  aspect-ratio: 4 / 3;
+}
+
+/* 3 Photos Layout */
+.memory-gallery.photos-3 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 760px;
+}
+
+.memory-gallery.photos-3 .memory-photo:first-child {
   grid-column: span 2;
-  height: 380px;
+  aspect-ratio: 16 / 9;
+  max-height: 380px;
 }
 
+.memory-gallery.photos-3 .memory-photo:nth-child(n+2) {
+  grid-column: span 1;
+  aspect-ratio: 4 / 3;
+}
+
+/* 4 Photos Layout */
+.memory-gallery.photos-4 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 760px;
+}
+
+.memory-gallery.photos-4 .memory-photo {
+  grid-column: span 1;
+  aspect-ratio: 4 / 3;
+}
+
+/* 5 Photos Layout */
+.memory-gallery.photos-5 {
+  grid-template-columns: repeat(6, 1fr);
+  max-width: 820px;
+}
+
+.memory-gallery.photos-5 .memory-photo:nth-child(-n + 2) {
+  grid-column: span 3;
+  aspect-ratio: 4 / 3;
+}
+
+.memory-gallery.photos-5 .memory-photo:nth-child(n + 3) {
+  grid-column: span 2;
+  aspect-ratio: 1 / 1;
+}
 
 /* Staggered animation */
-
 .memory-photo-1 {
   animation-delay: 0.15s;
 }
@@ -6022,25 +6063,19 @@ footer {
   animation-delay: 0.75s;
 }
 
-
 .memory-caption {
   margin: 22px auto 0;
-
   max-width: 600px;
-
   font-size: 15px;
   line-height: 1.7;
-
   opacity: 0.8;
 }
-
 
 /* =========================================
    ANIMATIONS
 ========================================= */
 
 @keyframes memoryReveal {
-
   from {
     opacity: 0;
     transform: translateY(25px);
@@ -6050,12 +6085,9 @@ footer {
     opacity: 1;
     transform: translateY(0);
   }
-
 }
 
-
 @keyframes photoAppear {
-
   from {
     opacity: 0;
     transform: translateY(20px) scale(0.97);
@@ -6065,69 +6097,70 @@ footer {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
-
 }
 
-
 /* =========================================
-   PHONE
+   PHONE RESPONSIVENESS
 ========================================= */
 
 @media (max-width: 600px) {
-
   .memory-reveal {
     width: 100%;
     margin-top: 28px;
   }
-
 
   .memory-heading {
     font-size: 14px;
     gap: 7px;
   }
 
-
-  .memory-gallery {
+  .memory-gallery,
+  .memory-gallery.photos-1,
+  .memory-gallery.photos-2,
+  .memory-gallery.photos-3,
+  .memory-gallery.photos-4,
+  .memory-gallery.photos-5 {
     grid-template-columns: 1fr;
     gap: 12px;
+    max-width: 100%;
   }
 
-
-  .memory-photo {
-    height: 230px;
+  .memory-photo,
+  .memory-gallery.photos-1 .memory-photo,
+  .memory-gallery.photos-2 .memory-photo,
+  .memory-gallery.photos-3 .memory-photo,
+  .memory-gallery.photos-4 .memory-photo,
+  .memory-gallery.photos-5 .memory-photo,
+  .memory-photo:first-child,
+  .memory-photo:only-child {
+    grid-column: span 1 !important;
+    aspect-ratio: 4 / 3;
+    height: auto;
+    max-height: 320px;
     border-radius: 16px;
   }
-
-
-  .memory-photo:first-child {
-    grid-column: span 1;
-    height: 300px;
-  }
-
 
   .memory-caption {
     font-size: 14px;
     padding: 0 12px;
   }
-
 }
-
 
 /* =========================================
    VERY SMALL PHONES
 ========================================= */
 
 @media (max-width: 380px) {
-
-  .memory-photo {
-    height: 200px;
+  .memory-photo,
+  .memory-gallery.photos-1 .memory-photo,
+  .memory-gallery.photos-2 .memory-photo,
+  .memory-gallery.photos-3 .memory-photo,
+  .memory-gallery.photos-4 .memory-photo,
+  .memory-gallery.photos-5 .memory-photo {
+    aspect-ratio: 4 / 3;
+    max-height: 240px;
+    border-radius: 14px;
   }
-
-
-  .memory-photo:first-child {
-    height: 260px;
-  }
-
 }
 .home-logo {
   border: none;
