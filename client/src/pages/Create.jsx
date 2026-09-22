@@ -296,7 +296,7 @@ function Create() {
                   type="text"
                   value={form.recipient}
                   onChange={handleChange}
-                  placeholder="e.g. Sarah"
+                  placeholder="e.g. Joy"
                   autoComplete="off"
                 />
 
